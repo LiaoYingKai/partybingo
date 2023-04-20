@@ -63,6 +63,12 @@ body {
   color: var(--inactive-color);
   letter-spacing: 18px;
   font-weight: 600;
+  
+}
+@media screen and (max-width: 768px) {
+  .current-number {
+    font-size: 160px;
+  }
 }
 
 .current-number.active {
