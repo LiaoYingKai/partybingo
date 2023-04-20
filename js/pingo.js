@@ -1,9 +1,9 @@
-import { SoundController } from './sound-controller.js';
-import { repository } from './repository.js';
+import {SoundController} from "./sound-controller.js";
+import {repository} from "./repository.js";
 
 const audio = new SoundController(
-  'assets/se_maoudamashii_instruments_drumroll.ogg',
-  'assets/se_maoudamashii_instruments_drum1_cymbal.ogg'
+  "assets/se_maoudamashii_instruments_drumroll.ogg",
+  "assets/se_maoudamashii_instruments_drum1_cymbal.ogg"
 );
 
 export const Pingo = {
@@ -19,7 +19,7 @@ export const Pingo = {
         <button v-else @click="stop(false)" class="spin stop">Stop</button>
       </div>
       <div class="history-container">
-        <div v-for="n in maxNumber" :class="historyClass(n)">
+        <div v-for="n in maxNumber" :class="historyClass(n)" @click="addNum(n)">
           {{ formatNumber(n) }}
         </div>
       </div>
@@ -47,9 +47,9 @@ export const Pingo = {
       return this.numbers.length;
     },
     currentNumberClass() {
-      let classNames = ['current-number'];
+      let classNames = ["current-number"];
       if (!this.started) {
-        classNames.push('active');
+        classNames.push("active");
       }
       return classNames;
     },
@@ -96,6 +96,7 @@ export const Pingo = {
       this.currentNumberIndex = -1;
       const numbers = _.shuffle(this.numbers);
       const selectedCount = 0;
+      console.log("numbers:", numbers);
       repository.save({
         numbers,
         selectedCount,
@@ -104,14 +105,14 @@ export const Pingo = {
       this.selectedCount = selectedCount;
     },
     resetWithConfirm() {
-      if (confirm('Do you really want to reset?')) {
+      if (confirm("Do you really want to reset?")) {
         this.reset();
       }
     },
     historyClass(n) {
-      let classNames = ['history'];
+      let classNames = ["history"];
       if (this.selectedNumbers.includes(n)) {
-        classNames.push('active');
+        classNames.push("active");
       }
       return classNames;
     },
@@ -121,7 +122,20 @@ export const Pingo = {
       for (; m >= 1; padWidth++) {
         m /= 10;
       }
-      return _.padStart((n || 0).toString(), padWidth, '0');
+      return _.padStart((n || 0).toString(), padWidth, "0");
+    },
+    addNum(n) {
+      if (this.selectedNumbers.includes(n)) {
+        return
+      }
+      this.numbers = this.numbers.filter((item) => item !== n);
+      this.numbers.splice(this.selectedCount, 0, n);
+      this.currentNumberIndex = this.selectedCount
+      this.selectedCount++;
+      repository.save({
+        numbers: this.numbers,
+        selectedCount: this.selectedCount,
+      });
     },
   },
   created() {
