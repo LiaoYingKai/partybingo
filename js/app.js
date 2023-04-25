@@ -5,7 +5,7 @@ import { repository } from './repository.js';
 export function parseParams() {
   const params = new URLSearchParams(window.location.search);
   return {
-    maxNumber: parseInt(params.get('max'), 10) || 75,
+    maxNumber: parseInt(params.get('max'), 10) || 50,
   };
 }
 
